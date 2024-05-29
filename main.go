@@ -2,22 +2,22 @@ package main
 
 import (
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/widget"
+	"fyne.io/fyne/v2/theme"
+	"image/color"
 )
 
 func main() {
 	a := app.New()
 	w := a.NewWindow("Hello")
 
-	label1 := widget.NewLabel("Label 1")
-	value1 := widget.NewLabel("Value 1")
-	label2 := widget.NewLabel("Label 2")
-	value2 := widget.NewLabel("Value 2")
+	img := canvas.NewImageFromResource(theme.FyneLogo())
+	img.FillMode = canvas.ImageFillOriginal
+	text := canvas.NewText("Overlay", color.White)
+	content := container.New(layout.NewCenterLayout(), img, text)
 
-	grid := container.New(layout.NewFormLayout(), label1, value1, label2, value2)
-
-	w.SetContent(grid)
+	w.SetContent(content)
 	w.ShowAndRun()
 }
