@@ -1,34 +1,25 @@
 package main
 
 import (
-	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 	"image/color"
-	"time"
 )
 
 func main() {
 	a := app.New()
 	w := a.NewWindow("Hello")
 
-	obj := canvas.NewRectangle(color.Black)
-	obj.Resize(fyne.NewSize(50, 50))
-	w.SetContent(container.NewWithoutLayout(obj))
+	text1 := canvas.NewText("Hello", color.White)
+	text2 := canvas.NewText("There", color.White)
+	text3 := canvas.NewText("(right)", color.White)
+	content := container.New(layout.NewHBoxLayout(), text1, text2, layout.NewSpacer(), text3)
 
-	red := color.NRGBA{R: 0xff, A: 0xff}
-	blue := color.NRGBA{B: 0xff, A: 0xff}
-	canvas.NewColorRGBAAnimation(red, blue, time.Second*2, func(c color.Color) {
-		obj.FillColor = c
-		canvas.Refresh(obj)
-	}).Start()
+	text4 := canvas.NewText("centered", color.White)
+	centered := container.New(layout.NewHBoxLayout(), layout.NewSpacer(), text4, layout.NewSpacer())
 
-	move := canvas.NewPositionAnimation(fyne.NewPos(0, 0), fyne.NewPos(200, 0), time.Second, obj.Move)
-	move.AutoReverse = true
-	move.Start()
-
-	w.Resize(fyne.NewSize(250, 50))
-	w.SetPadded(false)
+	w.SetContent(container.New(layout.NewVBoxLayout(), content, centered))
 	w.ShowAndRun()
 }
