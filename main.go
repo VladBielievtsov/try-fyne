@@ -2,22 +2,21 @@ package main
 
 import (
 	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
-	"image/color"
+	"fyne.io/fyne/v2/widget"
 )
 
 func main() {
 	a := app.New()
 	w := a.NewWindow("Hello")
 
-	img := canvas.NewImageFromResource(theme.FyneLogo())
-	img.FillMode = canvas.ImageFillOriginal
-	text := canvas.NewText("Overlay", color.White)
-	content := container.New(layout.NewMaxLayout(), img, text)
+	tabs := container.NewAppTabs(
+		container.NewTabItem("Tab 1", widget.NewLabel("Hello")),
+		container.NewTabItem("Tab 2", widget.NewLabel("There")),
+	)
 
-	w.SetContent(content)
+	tabs.SetTabLocation(container.TabLocationLeading)
+
+	w.SetContent(tabs)
 	w.ShowAndRun()
 }
