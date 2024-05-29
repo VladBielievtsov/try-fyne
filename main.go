@@ -9,12 +9,11 @@ import (
 
 func main() {
 	a := app.New()
-	w := a.NewWindow("Clock")
+	w := a.NewWindow("Hello")
 
-	text := canvas.NewText("Hello", color.White)
-	text.Alignment = fyne.TextAlignCenter
-	text.TextStyle = fyne.TextStyle{Italic: true}
-	w.SetContent(text)
+	line := canvas.NewLine(color.White)
+	line.StrokeWidth = 5
+	w.SetContent(line)
 	w.Resize(fyne.NewSize(1280, 720))
 
 	w.ShowAndRun()
