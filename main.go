@@ -12,14 +12,12 @@ func main() {
 	a := app.New()
 	w := a.NewWindow("Hello")
 
-	text1 := canvas.NewText("Hello", color.White)
-	text2 := canvas.NewText("There", color.White)
-	text3 := canvas.NewText("(right)", color.White)
-	content := container.New(layout.NewHBoxLayout(), text1, text2, layout.NewSpacer(), text3)
+	text1 := canvas.NewText("1", color.White)
+	text2 := canvas.NewText("2", color.White)
+	text3 := canvas.NewText("3", color.White)
 
-	text4 := canvas.NewText("centered", color.White)
-	centered := container.New(layout.NewHBoxLayout(), layout.NewSpacer(), text4, layout.NewSpacer())
+	grid := container.New(layout.NewGridLayout(2), text1, text2, text3)
 
-	w.SetContent(container.New(layout.NewVBoxLayout(), content, centered))
+	w.SetContent(grid)
 	w.ShowAndRun()
 }
