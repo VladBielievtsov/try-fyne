@@ -1,11 +1,9 @@
 package main
 
 import (
-	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
 	"image/color"
 )
 
@@ -13,12 +11,12 @@ func main() {
 	a := app.New()
 	w := a.NewWindow("Hello")
 
-	text1 := canvas.NewText("1", color.White)
-	text2 := canvas.NewText("2", color.White)
-	text3 := canvas.NewText("3", color.White)
+	top := canvas.NewText("top bar", color.White)
+	left := canvas.NewText("left", color.White)
+	middle := canvas.NewText("center", color.White)
 
-	grid := container.New(layout.NewGridWrapLayout(fyne.NewSize(50, 50)), text1, text2, text3)
+	content := container.NewBorder(top, nil, left, nil, middle)
 
-	w.SetContent(grid)
+	w.SetContent(content)
 	w.ShowAndRun()
 }
