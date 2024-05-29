@@ -11,9 +11,9 @@ func main() {
 	a := app.New()
 	w := a.NewWindow("Hello")
 
-	line := canvas.NewLine(color.White)
-	line.StrokeWidth = 5
-	w.SetContent(line)
+	circle := canvas.NewCircle(color.White)
+	circle.StrokeColor = color.Gray{Y: 0x99}
+	w.SetContent(circle)
 	w.Resize(fyne.NewSize(1280, 720))
 
 	w.ShowAndRun()
