@@ -16,7 +16,7 @@ func main() {
 	img := canvas.NewImageFromResource(theme.FyneLogo())
 	img.FillMode = canvas.ImageFillOriginal
 	text := canvas.NewText("Overlay", color.White)
-	content := container.New(layout.NewCenterLayout(), img, text)
+	content := container.New(layout.NewMaxLayout(), img, text)
 
 	w.SetContent(content)
 	w.ShowAndRun()
