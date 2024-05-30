@@ -1,142 +1,35 @@
 package main
 
 import (
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/theme"
+	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
-	"log"
-	"time"
 )
 
 func main() {
-	a := app.New()
-	w := a.NewWindow("Hello")
 
-	// Tab 1
+	myApp := app.New()
+	myWindow := myApp.NewWindow("List Data")
 
-	input := widget.NewEntry()
-	input.SetPlaceHolder("Enter text...")
-
-	check := widget.NewCheck("Optional", func(value bool) {
-		log.Println("Check set to: ", value)
-	})
-
-	radio := widget.NewRadioGroup([]string{"Option 1", "Option 2"}, func(value string) {
-		log.Println("Radio set to: ", value)
-	})
-
-	combo := widget.NewSelect([]string{"Option 1", "Option 2"}, func(value string) {
-		log.Println("Combo set to: ", value)
-	})
-
-	// Tab 2
-
-	entry := widget.NewEntry()
-	textArea := widget.NewMultiLineEntry()
-
-	form := &widget.Form{
-		Items: []*widget.FormItem{
-			{Text: "Input", Widget: entry},
-		},
-		OnSubmit: func() {
-			log.Println("Form submitted: ", entry.Text)
-			log.Println("Multiline: ", textArea.Text)
-		},
-	}
-
-	form.Append("Text", textArea)
-
-	// Tab 3
-
-	progress := widget.NewProgressBar()
-	infinite := widget.NewProgressBarInfinite()
-
-	go func() {
-		for i := 0.0; i <= 1.0; i += 0.1 {
-			time.Sleep(time.Millisecond * 250)
-			progress.SetValue(i)
-		}
-	}()
-
-	// Tab 4
-
-	toolBar := widget.NewToolbar(
-		widget.NewToolbarAction(theme.DocumentCreateIcon(), func() {
-			log.Println("New Document")
-		}),
-		widget.NewToolbarSeparator(),
-		widget.NewToolbarAction(theme.ContentCutIcon(), func() {}),
-		widget.NewToolbarAction(theme.ContentCopyIcon(), func() {}),
-		widget.NewToolbarAction(theme.ContentPasteIcon(), func() {}),
-		widget.NewToolbarSpacer(),
-		widget.NewToolbarAction(theme.HelpIcon(), func() {
-			log.Println("Display help")
-		}),
+	data := binding.BindStringList(
+		&[]string{"Item 1", "Item 2", "Item 3"},
 	)
 
-	// Tab 5
-
-	data := [][]string{[]string{"top left", "top right"},
-		[]string{"bottom left", "bottom right"}}
-
-	list := widget.NewTable(
-		func() (int, int) {
-			return len(data), len(data[0])
-		},
+	list := widget.NewListWithData(data,
 		func() fyne.CanvasObject {
 			return widget.NewLabel("template")
 		},
-		func(i widget.TableCellID, o fyne.CanvasObject) {
-			o.(*widget.Label).SetText(data[i.Row][i.Col])
-		},
-	)
-
-	// Tab 6
-
-	tree := widget.NewTree(
-		func(id widget.TreeNodeID) []widget.TreeNodeID {
-			switch id {
-			case "":
-				return []widget.TreeNodeID{"a", "b", "c"}
-			case "a":
-				return []widget.TreeNodeID{"a1", "a2"}
-			}
-			return []string{}
-		},
-		func(id widget.TreeNodeID) bool {
-			return id == "" || id == "a"
-		},
-		func(branch bool) fyne.CanvasObject {
-			if branch {
-				return widget.NewLabel("Branch template")
-			}
-			return widget.NewLabel("Leaf template")
-		},
-		func(id widget.TreeNodeID, branch bool, o fyne.CanvasObject) {
-			text := id
-			if branch {
-				text += " (branch)"
-			}
-			o.(*widget.Label).SetText(text)
+		func(i binding.DataItem, o fyne.CanvasObject) {
+			o.(*widget.Label).Bind(i.(binding.String))
 		})
 
-	tabs := container.NewAppTabs(
-		container.NewTabItem("Tab 1", container.NewVBox(input, check, radio, combo, widget.NewButton("Save", func() {
-			log.Println("Content was: ", input.Text)
-		}))),
-		container.NewTabItem("Tab 2", container.NewVBox(widget.NewLabel("Hello"), form)),
-		container.NewTabItem("Tab 3", container.NewVBox(progress, infinite)),
-		container.NewTabItem("Tab 4", container.NewBorder(toolBar, nil, nil, nil, widget.NewLabel("Content"))),
-		container.NewTabItem("Tab 5", container.New(layout.NewMaxLayout(), list)),
-		container.NewTabItem("Tab 6", container.New(layout.NewMaxLayout(), tree)),
-	)
-
-	tabs.SetTabLocation(container.TabLocationLeading)
-
-	w.SetContent(tabs)
-	w.Resize(fyne.NewSize(450, 400))
-	w.ShowAndRun()
+	add := widget.NewButton("Append", func() {
+		val := fmt.Sprintf("Item %d", data.Length()+1)
+		data.Append(val)
+	})
+	myWindow.SetContent(container.NewBorder(nil, add, nil, nil, list))
+	myWindow.ShowAndRun()
 }
