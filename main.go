@@ -4,6 +4,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"log"
 	"time"
@@ -59,12 +60,29 @@ func main() {
 		}
 	}()
 
+	// Tab 4
+
+	toolBar := widget.NewToolbar(
+		widget.NewToolbarAction(theme.DocumentCreateIcon(), func() {
+			log.Println("New Document")
+		}),
+		widget.NewToolbarSeparator(),
+		widget.NewToolbarAction(theme.ContentCutIcon(), func() {}),
+		widget.NewToolbarAction(theme.ContentCopyIcon(), func() {}),
+		widget.NewToolbarAction(theme.ContentPasteIcon(), func() {}),
+		widget.NewToolbarSpacer(),
+		widget.NewToolbarAction(theme.HelpIcon(), func() {
+			log.Println("Display help")
+		}),
+	)
+
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Tab 1", container.NewVBox(input, check, radio, combo, widget.NewButton("Save", func() {
 			log.Println("Content was: ", input.Text)
 		}))),
 		container.NewTabItem("Tab 2", container.NewVBox(widget.NewLabel("Hello"), form)),
 		container.NewTabItem("Tab 3", container.NewVBox(progress, infinite)),
+		container.NewTabItem("Tab 4", container.NewBorder(toolBar, nil, nil, nil, widget.NewLabel("Content"))),
 	)
 
 	tabs.SetTabLocation(container.TabLocationLeading)
