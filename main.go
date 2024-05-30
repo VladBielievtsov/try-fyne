@@ -94,6 +94,35 @@ func main() {
 		},
 	)
 
+	// Tab 6
+
+	tree := widget.NewTree(
+		func(id widget.TreeNodeID) []widget.TreeNodeID {
+			switch id {
+			case "":
+				return []widget.TreeNodeID{"a", "b", "c"}
+			case "a":
+				return []widget.TreeNodeID{"a1", "a2"}
+			}
+			return []string{}
+		},
+		func(id widget.TreeNodeID) bool {
+			return id == "" || id == "a"
+		},
+		func(branch bool) fyne.CanvasObject {
+			if branch {
+				return widget.NewLabel("Branch template")
+			}
+			return widget.NewLabel("Leaf template")
+		},
+		func(id widget.TreeNodeID, branch bool, o fyne.CanvasObject) {
+			text := id
+			if branch {
+				text += " (branch)"
+			}
+			o.(*widget.Label).SetText(text)
+		})
+
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Tab 1", container.NewVBox(input, check, radio, combo, widget.NewButton("Save", func() {
 			log.Println("Content was: ", input.Text)
@@ -102,6 +131,7 @@ func main() {
 		container.NewTabItem("Tab 3", container.NewVBox(progress, infinite)),
 		container.NewTabItem("Tab 4", container.NewBorder(toolBar, nil, nil, nil, widget.NewLabel("Content"))),
 		container.NewTabItem("Tab 5", container.New(layout.NewMaxLayout(), list)),
+		container.NewTabItem("Tab 6", container.New(layout.NewMaxLayout(), tree)),
 	)
 
 	tabs.SetTabLocation(container.TabLocationLeading)
