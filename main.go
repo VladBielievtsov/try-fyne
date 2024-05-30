@@ -27,11 +27,26 @@ func main() {
 		log.Println("Combo set to: ", value)
 	})
 
+	entry := widget.NewEntry()
+	textArea := widget.NewMultiLineEntry()
+
+	form := &widget.Form{
+		Items: []*widget.FormItem{
+			{Text: "Input", Widget: entry},
+		},
+		OnSubmit: func() {
+			log.Println("Form submitted: ", entry.Text)
+			log.Println("Multiline: ", textArea.Text)
+		},
+	}
+
+	form.Append("Text", textArea)
+
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Tab 1", container.NewVBox(input, check, radio, combo, widget.NewButton("Save", func() {
 			log.Println("Content was: ", input.Text)
 		}))),
-		container.NewTabItem("Tab 2", widget.NewLabel("Hello")),
+		container.NewTabItem("Tab 2", container.NewVBox(widget.NewLabel("Hello"), form)),
 	)
 
 	tabs.SetTabLocation(container.TabLocationLeading)
